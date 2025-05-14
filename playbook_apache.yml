@@ -1,0 +1,44 @@
+---
+#tasks file for ./roles/apache_role
+- name: Install Apache Server
+  apt:
+    name: apache2
+    state: present
+    update_cache: yes
+- name: Install UFW
+  apt:
+    name: ufw
+    state: present
+    update_cache: yes
+- name: Start Apache Server, if not started and enable
+  service:
+    name: apache2
+    state: started
+    enabled: yes
+- name: Open TCP port 80 for UFW
+  ufw:
+    rule: allow
+    port: '80'
+    proto: tcp
+- name: Find first disk
+  set_fact:
+    first_disk: >-
+      {{
+        ansible_devices
+        | dict2items
+        | selectattr('key', 'match', '^(sd|vd|nvme)[a-z]+$')
+        | list
+        | map(attribute='key')
+        | first
+      }}
+
+- name: 
+  template:
+    src: index.html.j2
+    dest: '/var/www/html/index.html'
+  notify:
+    - Restart Apache Server
+
+- name: Check status
+  uri:
+    url: "http://{{ inventory_hostname }}"
