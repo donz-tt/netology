@@ -1,0 +1,10 @@
+---
+- hosts: myhosts
+  vars:
+    motd_message: "Have a nice day!"
+  become: yes
+  tasks:
+  - name: Change motd
+    ansible.builtin.copy:
+      content: "{{ motd_message }}"
+      dest: /etc/motd
