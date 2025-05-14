@@ -6,5 +6,5 @@
   tasks:
   - name: Change motd
     ansible.builtin.copy:
-      content: "{{ motd_mess }} \n Your IP {{ ansible_all_ipv4_addresses }} \n hostname {{ ansible_hostname }}"
+      content: "{{ motd_message }} \n Your IP {{ ansible_all_ipv4_addresses }} \n hostname {{ ansible_hostname }}"
       dest: /etc/motd
